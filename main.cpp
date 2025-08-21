@@ -27,6 +27,10 @@ const int Blue3 = 27;
 const int Red3  = 14;
 bool isActive3 = false;
 
+const int btn1 = 4;
+const int btn2 = 5;
+const int btn3 = 18;
+
 // Variáveis de hora interna (simulada)
 int horaSim = 8;
 int minutoSim = 59;
@@ -34,10 +38,17 @@ int minutoSim = 59;
 void setup() {
   Serial.begin(115200);
 
+  // pinagem dos leds
   pinMode(Red1, OUTPUT); pinMode(Blue1, OUTPUT);
   pinMode(Red2, OUTPUT); pinMode(Blue2, OUTPUT);
   pinMode(Red3, OUTPUT); pinMode(Blue3, OUTPUT);
 
+  // pinagem dos botões
+  pinMode(btn1, INPUT_PULLUP);
+  pinMode(btn2, INPUT_PULLUP);
+  pinMode(btn3, INPUT_PULLUP);
+
+  // configurar wi-fi
   if(usarWiFi){
     Serial.println("Tentando conectar ao Wi-Fi...");
     WiFi.begin(ssid, password);
@@ -55,6 +66,12 @@ void setup() {
 void loop() {
   String agora;
 
+  // checar se os botões estão pressionados
+  bool b1 = digitalRead(btn1) == LOW;
+  bool b2 = digitalRead(btn2) == LOW;
+  bool b3 = digitalRead(btn3) == LOW;
+
+  // Calcular tempo
   if(usarWiFi){
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
@@ -79,9 +96,10 @@ void loop() {
     delay(2000); // 1 minuto simulado = 2 segundos
   }
 
+  // printar horario
   Serial.println("Hora atual: " + agora);
 
-  // Apaga todos os LEDs antes de checar
+  // Apaga todos os LEDs
   if (!isActive1){
     digitalWrite(Red1, HIGH); digitalWrite(Blue1, HIGH);
   }
@@ -109,6 +127,24 @@ void loop() {
       isActive3 = true;
     }
   }
+
+  // Botões pressionados
+  if(b1){
+      isActive1 = false;      
+      digitalWrite(Red1, HIGH);    
+      digitalWrite(Blue1, LOW);    
+  }
+  if(b2){
+      isActive2 = false;
+      digitalWrite(Red2, HIGH);
+      digitalWrite(Blue2, LOW);
+  }
+  if(b3){
+      isActive3 = false;
+      digitalWrite(Red3, HIGH);
+      digitalWrite(Blue3, LOW);
+  }
+
 
   if(usarWiFi){
     delay(60000);
