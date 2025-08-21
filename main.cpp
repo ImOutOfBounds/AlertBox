@@ -15,17 +15,11 @@ const int   daylightOffset_sec = 0;
 String horarios[] = {"09:00", "15:00", "21:00"};
 
 // Pinos LEDs RGB (Blue, Red)
-const int Blue1 = 32;
-const int Red1  = 33;
-bool isActive1 = false;
+const int Blue1 = 32; const int Red1  = 33; bool isActive1 = false; bool click1 = false;
+ 
+const int Blue2 = 25; const int Red2  = 26; bool isActive2 = false; bool click2 = false;
 
-const int Blue2 = 25;
-const int Red2  = 26;
-bool isActive2 = false;
-
-const int Blue3 = 27;
-const int Red3  = 14;
-bool isActive3 = false;
+const int Blue3 = 27; const int Red3  = 14; bool isActive3 = false; bool click3 = false;
 
 const int btn1 = 4;
 const int btn2 = 5;
@@ -93,7 +87,7 @@ void loop() {
     sprintf(buffer, "%02d:%02d", horaSim, minutoSim);
     agora = String(buffer);
 
-    delay(2000); // 1 minuto simulado = 2 segundos
+    delay(100); // 1 minuto simulado = 1 segundo
   }
 
   // printar horario
@@ -101,13 +95,25 @@ void loop() {
 
   // Apaga todos os LEDs
   if (!isActive1){
-    digitalWrite(Red1, HIGH); digitalWrite(Blue1, HIGH);
+    if (click1) {
+      digitalWrite(Red1, HIGH); digitalWrite(Blue1, LOW);
+    } else {
+      digitalWrite(Red1, HIGH); digitalWrite(Blue1, HIGH);
+    }
   }
   if (!isActive2){
-    digitalWrite(Red2, HIGH); digitalWrite(Blue2, HIGH);
+    if (click2) {
+      digitalWrite(Red2, HIGH); digitalWrite(Blue2, LOW);
+    } else {
+      digitalWrite(Red2, HIGH); digitalWrite(Blue2, HIGH);
+    }
   }
   if (!isActive3){
-    digitalWrite(Red3, HIGH); digitalWrite(Blue3, HIGH);
+    if (click3) {
+      digitalWrite(Red3, HIGH); digitalWrite(Blue3, LOW);
+    } else {
+      digitalWrite(Red3, HIGH); digitalWrite(Blue3, HIGH);
+    }
   }
   
   
@@ -129,20 +135,33 @@ void loop() {
   }
 
   // Botões pressionados
-  if(b1){
+  if(b1 and isActive1){
       isActive1 = false;      
+      click1 = true;
       digitalWrite(Red1, HIGH);    
       digitalWrite(Blue1, LOW);    
   }
-  if(b2){
+  if(b2 and isActive2){
       isActive2 = false;
+      click2 = true;
       digitalWrite(Red2, HIGH);
       digitalWrite(Blue2, LOW);
   }
-  if(b3){
+  if(b3 and isActive3){
       isActive3 = false;
+      click3 = true;
       digitalWrite(Red3, HIGH);
       digitalWrite(Blue3, LOW);
+  }
+
+  if (agora == "00:00") {
+    click1 = false;
+    click2 = false;
+    click3 = false;
+
+    isActive1 = false;  
+    isActive2 = false;  
+    isActive3 = false;  
   }
 
 
