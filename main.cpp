@@ -16,14 +16,12 @@ String horarios[] = {"09:00", "15:00", "21:00"};
 
 // Pinos LEDs RGB (Blue, Red)
 const int Blue1 = 32; const int Red1  = 33; bool isActive1 = false; bool click1 = false;
- 
 const int Blue2 = 25; const int Red2  = 26; bool isActive2 = false; bool click2 = false;
-
 const int Blue3 = 27; const int Red3  = 14; bool isActive3 = false; bool click3 = false;
 
-const int btn1 = 4;
-const int btn2 = 5;
-const int btn3 = 18;
+const int btn1 = 4; const int btn2 = 5; const int btn3 = 18;
+
+const int buzzer = 19;
 
 // Variáveis de hora interna (simulada)
 int horaSim = 8;
@@ -41,6 +39,9 @@ void setup() {
   pinMode(btn1, INPUT_PULLUP);
   pinMode(btn2, INPUT_PULLUP);
   pinMode(btn3, INPUT_PULLUP);
+
+  // pinagem Buzzer
+  pinMode(buzzer, OUTPUT);
 
   // configurar wi-fi
   if(usarWiFi){
@@ -132,6 +133,13 @@ void loop() {
       digitalWrite(Red3, LOW); digitalWrite(Blue3, HIGH);
       isActive3 = true;
     }
+  }
+
+  if(isActive1 || isActive2 || isActive3){
+    // Algum LED vermelho aceso → toca buzzer
+    tone(buzzer, 1000); // 1kHz
+  } else {
+    noTone(buzzer); // apaga buzzer
   }
 
   // Botões pressionados
